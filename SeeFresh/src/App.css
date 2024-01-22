@@ -1,0 +1,4 @@
+.container{
+    @apply h-[100dvh] max-w-xs;
+    @apply overflow-hidden;
+}
