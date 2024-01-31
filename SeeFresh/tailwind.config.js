@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      poppins: ["Poppins", "sans-serif"],
+      jarkarta: ['"Plus Jakarta Sans"', "sans-serif"],
+    },
   },
   plugins: [],
 }

@@ -1,27 +1,30 @@
-import './App.css'
-import CustomWebcam from "./assets/Components/CustomWebcam/CustomWebcam"; // import it
-import React, {useState, useEffect}from 'react';
+import './App.css';
+import React from 'react';
+import InputPage from './pages/inputPage/inputPage'
+import CustomWebcam from './assets/Components/CustomWebcam/CustomWebcam';
+import { useState } from 'react';
+import OutputPage from './pages/OutputPage/OutputPage';
 
 function App() {
-  const [data, setData] = useState([{}])
+    const [capturedPrediction, setCapturedPrediction] = useState(null);
 
-  useEffect(()=>{
-    fetch("http://127.0.0.1:5000/members").then(
-      res=> res.json()
-    ).then(
-      data => {
-        setData(data)
-        console.log(data)
-      }
-    )
-  },[])
-  return (
-    <div className='container'>
-      <h1 className='text-sky-400'>SeeFresh</h1>
-      <CustomWebcam />
-      </div>
-  )
+    // Function to receive prediction from CustomWebcam
+    const handlePredictionReceived = (prediction) => {
+        setCapturedPrediction(prediction);
+        
+    };
+    return (
+        <div className='container'>
+             
+           
+            {capturedPrediction ? <OutputPage prediction={capturedPrediction}/> : <CustomWebcam onPredictionReceived={handlePredictionReceived} /> }
+            {console.log(capturedPrediction)}
+            {capturedPrediction && <h1 className='text-white'>Captured Prediction: {capturedPrediction}</h1>}
+        </div>
+    );
 }
 
-export default App
+export default App;
+
+
 

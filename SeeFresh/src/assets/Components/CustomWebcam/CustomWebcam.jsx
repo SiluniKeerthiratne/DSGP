@@ -1,38 +1,52 @@
-import Webcam from "react-webcam";
-import { useCallback, useRef, useState } from "react"; // import useState
+import React, { useState, useRef } from 'react';
+import Webcam from 'react-webcam';
 
-const CustomWebcam = () => {
-  
-  const webcamRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null); // initialize it
+const CustomWebcam = ({onPredictionReceived}) => {
+    const webcamRef = useRef(null);
 
-  // create a capture function
-  const capture = useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setImgSrc(imageSrc);
-  }, [webcamRef]);
+    const capture = async () => {
+        const imageSrc = webcamRef.current.getScreenshot();
+        const formData = new FormData();
+        formData.append('image', dataURItoBlob(imageSrc));
 
-  // create a recapture function
-  const retake = () => {
-    setImgSrc(null);
-  };
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        onPredictionReceived(data.prediction);
+    };
 
-  return (
-    <div className="container">
-      {imgSrc ? (
-        <img src={imgSrc} alt="webcam" />
-      ) : (
-        <Webcam height={600} width={600} ref={webcamRef} />
-      )}
-      <div className="btn-container">
-        {imgSrc ? (
-          <button onClick={retake}>Retake photo</button>
-        ) : (
-          <button onClick={capture}>Capture photo</button>
-        )}
-      </div>
-    </div>
-  );
+    const dataURItoBlob = (dataURI) => {
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    };
+    const videoConstraints = {
+        width: 420,
+        height: 620,
+        facingMode: "user",
+      };
+
+    return (
+        
+        <div className='flex flex-col justify-between w-full mx-6 mt-6'>
+            <Webcam
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat="image/jpeg"
+                height={400}
+                width={400}
+                videoConstraints={videoConstraints}
+            />
+            <button onClick={capture} className="bg-black border-2 border-white rounded text-white w-full h-20 font-poppins font-semibold text-base mb-6" >Capture</button>
+        </div>
+    );
 };
 
 export default CustomWebcam;
