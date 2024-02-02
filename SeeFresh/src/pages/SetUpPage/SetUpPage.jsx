@@ -10,7 +10,7 @@ const setUpPage = () => {
             <div className='mb-6'>
                 <h1>we will indicate with a “beep” if an object is placed within the screen, then tap the the screen again to capture.</h1> 
             </div>
-            <TextToSpeech text={t} />      
+            
     </div>
     )
   

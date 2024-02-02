@@ -27,6 +27,7 @@ function App() {
 
     const textInto = "Welcome to SeeFresh. Everything you need to know about your groceries just one click away!. Tap screen to continue"
     const textSetUp = "Tap once on the  the screen, we will indicate with a “beep” if an object is placed within the screen, then tap the the screen again to capture."
+    const cameraIndicate = "Camera is on"
 
     const captureNull = async () => {
         const imageSrc = webcamRef.current.getScreenshot();
@@ -56,24 +57,20 @@ function App() {
     };
 
     const caputureSetup = () => {
+        handlePlay(textSetUp);
         setCapturedPrediction("setupPlay");
     };
 
     const caputureSetupPlay = () => {
-        handlePlay(textSetUp);
+        handlePlay(cameraIndicate);
         setCapturedPrediction(null);
     };
 
     const handlePlay = (text) => {
         const synth = window.speechSynthesis;
         const u = new SpeechSynthesisUtterance(text);
-    
-        u.onend = () => {
-            // Speech synthesis has finished, proceed to the next action
-            handleNextAction();
-        };
-    
         synth.speak(u);
+    
     };
     
 
