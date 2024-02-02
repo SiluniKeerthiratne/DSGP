@@ -7,3 +7,4 @@ const OutputPage = ({ prediction }) => {
 };
 
 export default OutputPage;
+
