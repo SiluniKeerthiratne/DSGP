@@ -1,38 +1,14 @@
-// VideoFeed.js
+import React, { useEffect, useRef } from "react";
 
-import React, { useEffect, useRef } from 'react';
-
-const VideoFeed = () => {
-  const videoRef = useRef();
-
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    const streamUrl = '/video_feed';
-
-    if (videoElement) {
-      const startStream = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-          videoElement.srcObject = stream;
-        } catch (err) {
-          console.error('Error accessing camera:', err);
-        }
-      };
-
-      startStream();
-    }
-  }, []);
-
+const App = () => {
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-lg-8 offset-lg-2">
-          <h3 className="mt-5">Live Streaming</h3>
-          <video ref={videoRef} width="100%" autoPlay playsInline />
-        </div>
-      </div>
-    </div>
+    <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
+      <img src="http://127.0.0.1:8000/video"
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      alt="Video"/>
+  </div>
+  
   );
 };
 
-export default VideoFeed;
+export default App;
