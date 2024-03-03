@@ -27,9 +27,6 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 # Objects to detect
 objects_to_detect = ["apple", "banana", "mango", "potato", "tomato"]
 
-# Global variable to track start time
-start_time = None
-
 # Camera initialization
 camera = cv2.VideoCapture(0)
 
@@ -51,7 +48,7 @@ def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshol
                 if confidence > confidence_threshold and class_names[int(box[5])] in objects_to_detect:
                     object_detected = True
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
-                    object_boxes.append((x1, y1, x2, y2,class_names[int(box[5])]))  # Store bounding box coordinates
+                    object_boxes.append((x1, y1, x2, y2, class_names[int(box[5])]))  # Store bounding box coordinates
 
                     org = [x1, y1]
                     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -65,50 +62,42 @@ def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshol
     return object_detected, object_boxes
 
 def ObjDec():
-    global start_time  # To modify the global variable inside the function
-    
-    while True:
-        success, img = camera.read()
-        results = model(img, stream=True)
-        object_detected, object_boxes = draw_boxes(img, results, classNames, objects_to_detect)
-        
-        for box in object_boxes:
-            for i in box:
-                print(i)
-            x1, y1, x2, y2, class_name = box
-            cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+        global detected_object  # Declare detected_object as a global variable
 
-        # Check if an object has been detected for more than one second
-        if object_detected:
-            if start_time is None:
-                start_time = time.time()
-            elif time.time() - start_time >= 1:
-                for box in object_boxes:
-                    x1, y1, x2, y2, class_name = box
-                    if class_name in objects_to_detect:
-                        print(class_name)
+        detected_object = {}  # Initialize detected_object
+        while True:
+            success, img = camera.read()
+            results = model(img, stream=True)
+            object_detected, object_boxes = draw_boxes(img, results, classNames, objects_to_detect)
+
+            for box in object_boxes:
+                x1, y1, x2, y2, class_name = box
+                cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+
+                # Check if the detected object is in the objects_to_detect list
+                if class_name in objects_to_detect:
+                    detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
+                    break  # Break the loop if an object is detected
+            
+            if object_detected:
                 
-                start_time = None
-                user_input = input("Do you want to capture the object? (y/n): ")
-                if user_input.lower() == 'y':
-                    print("Photo taken!")
-                    # Add your photo capture logic here
-                    pass
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+                return {"isObjectDetected": True, "objectClass": detected_object["class_name"]}
 
-        # Encode the frame as JPEG
-        ret, buffer = cv2.imencode('.jpg', img)
-        frame = buffer.tobytes()
+            # Encode the frame as JPEG
+            ret, buffer = cv2.imencode('.jpg', img)
+            frame = buffer.tobytes()
 
-        # Yield the frame for video streaming
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
+            # Yield the frame for video streaming
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video')
 def video():
     return Response(ObjDec(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-if __name__=="__main__":
+
+
+
+
+if __name__ == "__main__":
     app.run(port=8000, debug=True)
