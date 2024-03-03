@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, jsonify
 from flask_cors import CORS
 import cv2
 import math
@@ -10,6 +10,7 @@ CORS(app)
 
 # Initialize the YOLO model
 model = YOLO("yolo-Weights/yolov8n.pt")
+detected_object = {}  # declare detected_object as global and initialize it as a dictionary
 
 # Object classes
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
@@ -62,42 +63,48 @@ def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshol
     return object_detected, object_boxes
 
 def ObjDec():
-        global detected_object  # Declare detected_object as a global variable
+    global detected_object  # declare detected_object as global
 
-        detected_object = {}  # Initialize detected_object
-        while True:
-            success, img = camera.read()
-            results = model(img, stream=True)
-            object_detected, object_boxes = draw_boxes(img, results, classNames, objects_to_detect)
+    while True:
+        success, img = camera.read()
+        results = model(img, stream=True)
+        object_detected, object_boxes = draw_boxes(img, results, classNames, objects_to_detect)
 
-            for box in object_boxes:
-                x1, y1, x2, y2, class_name = box
-                cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+        for box in object_boxes:
+            x1, y1, x2, y2, class_name = box
+            cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
 
-                # Check if the detected object is in the objects_to_detect list
-                if class_name in objects_to_detect:
-                    detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
-                    break  # Break the loop if an object is detected
-            
-            if object_detected:
-                
-                return {"isObjectDetected": True, "objectClass": detected_object["class_name"]}
+            # Check if the detected object is in the objects_to_detect list
+            if class_name in objects_to_detect:
+                print(class_name, "yomama")
+                detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
+                break  # Break the loop if an object is detected
+        if detected_object:
+            print("here")
+            break
 
-            # Encode the frame as JPEG
-            ret, buffer = cv2.imencode('.jpg', img)
-            frame = buffer.tobytes()
+        # Encode the frame as JPEG
+        ret, buffer = cv2.imencode('.jpg', img)
+        frame = buffer.tobytes()
 
-            # Yield the frame for video streaming
-            yield (b'--frame\r\n'
+        # If an object is detected, yield it
+        yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video')
 def video():
     return Response(ObjDec(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/getDetection')
+def getDetection():
+    global detected_object  # declare detected_object as global
 
-
-
+    if detected_object and detected_object.get("class_name"):
+        print(detected_object["class_name"])
+        return jsonify({"isObjectDetected": True, "objectClass": detected_object["class_name"]})
+    else:
+        print("No object detected")
+        return jsonify({"isObjectDetected": False})
 
 if __name__ == "__main__":
     app.run(port=8000, debug=True)
