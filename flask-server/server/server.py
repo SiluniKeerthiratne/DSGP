@@ -32,7 +32,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 objects_to_detect = ["apple", "banana", "mango", "potato", "tomato"]
 
 # Camera initialization
-camera = cv2.VideoCapture(0)
+
 
 # Global variables
 start_time = None
@@ -70,7 +70,14 @@ def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshol
     return object_detected, object_boxes
 
 def ObjDec():
-    global detected_object, start_time, img_array  # declare global variables
+    camera = cv2.VideoCapture(0)
+    global detected_object
+    global start_time
+    global img_array
+    
+    detected_object = {}
+    start_time = time.time()
+    img_array = []
 
     while True:
         success, img = camera.read()
@@ -104,6 +111,7 @@ def ObjDec():
         if detected_object:
             print("here")
             
+            
             break
 
         # Encode the frame as JPEG
@@ -124,7 +132,10 @@ def getDetection():
 
     if detected_object and detected_object.get("class_name"):
         print(detected_object["class_name"], "2222")
-        return jsonify({"isObjectDetected": True, "objectClass": detected_object["class_name"]})
+        class_name = detected_object["class_name"]
+        detected_object = {} # Reset detected_object
+        
+        return jsonify({"isObjectDetected": True, "objectClass": class_name})
     else:
         print("No object detected")
         return jsonify({"isObjectDetected": False})
