@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OutputTwo from '../OutputTwo/OutputTwo';
-import InputPage from "../../pages/inputPage/InputPage"; // Import InputPage component
+import App from '../../App';
 
 const OutputOne = ({ detectedObjectsData }) => {
   const [clicked, setClicked] = useState(false);
@@ -20,7 +20,7 @@ const OutputOne = ({ detectedObjectsData }) => {
             const jsonData = response.data;
             setRottenState(jsonData.prediction); // Update state with fetched data
             console.log(jsonData);
-            if (jsonData.prediction === true) {
+            if (jsonData.prediction) {
               console.log("Prediction is true, handle accordingly");
               setShowComponentTwo(true);
               clearTimeout(timer);
@@ -49,10 +49,10 @@ const OutputOne = ({ detectedObjectsData }) => {
             A {detectedObjectsData.objectClass} is detected on the screen, should we capture it. Tap on screen if you want to capture it
           </h1>
         </div>
-      ) : showComponentTwo === true ? (
+      ) : showComponentTwo == true ? (
         <OutputTwo isRottenData={rottenState} />
       ) : (
-        <InputPage onDataDetected={() => {}} /> // Navigate back to InputPage without setting detected data
+        <App /> // Navigate back to InputPage without setting detected data
       )}
     </div>
   );
