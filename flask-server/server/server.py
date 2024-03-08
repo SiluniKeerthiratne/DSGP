@@ -1,15 +1,18 @@
-from flask import Flask, Response, jsonify
-from flask_cors import CORS
 import cv2
 import math
 import time
 from ultralytics import YOLO
+import numpy as np
+import pickle
+from flask import Flask, Response, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# Initialize the YOLO model
+# Initialize models
 model = YOLO("yolo-Weights/yolov8n.pt")
+modelOne = pickle.load(open('./model.pk1', 'rb'))
 detected_object = {}  # declare detected_object as global and initialize it as a dictionary
 
 # Object classes
@@ -30,6 +33,10 @@ objects_to_detect = ["apple", "banana", "mango", "potato", "tomato"]
 
 # Camera initialization
 camera = cv2.VideoCapture(0)
+
+# Global variables
+start_time = None
+img_array = None
 
 def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshold=0.5):
     object_detected = False
@@ -63,7 +70,7 @@ def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshol
     return object_detected, object_boxes
 
 def ObjDec():
-    global detected_object  # declare detected_object as global
+    global detected_object, start_time, img_array  # declare global variables
 
     while True:
         success, img = camera.read()
@@ -75,12 +82,28 @@ def ObjDec():
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
 
             # Check if the detected object is in the objects_to_detect list
-            if class_name in objects_to_detect:
-                print(class_name, "yomama")
-                detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
-                break  # Break the loop if an object is detected
+            if object_detected:
+                if start_time is None:
+                    start_time = time.time()
+                elif time.time() - start_time >= 5:
+                    print(class_name, "yomama")
+                    detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
+                   
+                    # Crop the object from the original image
+                    cropped_object = img[y1:y2, x1:x2]
+                    
+                    # Resize the image to match model input shape
+                    resized_object = cv2.resize(cropped_object, (224, 224))
+    
+                    # Convert the image to array and normalize pixel values
+                    img_array = np.array(resized_object) / 255.0
+                    camera.release()
+                    
+                    # Now you have img_array ready for your model inference
+                break  # Break the loop if an object is detected            
         if detected_object:
             print("here")
+            
             break
 
         # Encode the frame as JPEG
@@ -100,11 +123,24 @@ def getDetection():
     global detected_object  # declare detected_object as global
 
     if detected_object and detected_object.get("class_name"):
-        print(detected_object["class_name"])
+        print(detected_object["class_name"], "2222")
         return jsonify({"isObjectDetected": True, "objectClass": detected_object["class_name"]})
     else:
         print("No object detected")
         return jsonify({"isObjectDetected": False})
+    
+@app.route('/getPredictionOne')
+def getPredictionOne():
+    global img_array
+    
+    if img_array is not None:
+        prediction = modelOne.predict(np.array([img_array]))
+        class_names = ['Class 1', 'Class 2']  
+        predicted_class = class_names[np.argmax(prediction)]
+        
+        return jsonify({"prediction": predicted_class})
+    else:
+        return jsonify({"error": "Image array is not available yet"})
 
 if __name__ == "__main__":
     app.run(port=8000, debug=True)

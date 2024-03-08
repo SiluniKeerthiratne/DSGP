@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import InputPage from "./pages/inputPage/InputPage";
 
+import './App.css';
+
 
 const App = () => {
   
 
   return (
-    <div>
+    <div className='container'>
+      
       <InputPage/>
       
     </div>

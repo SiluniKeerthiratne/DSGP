@@ -16,19 +16,20 @@ const InputPage = () => {
         console.log(jsonData);
         if(jsonData.isObjectDetected == true){
           setDetectedObject(true)
+          clearInterval(intervalId)
+          // add code to stop fetching data
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData(); // Fetch data initially
+    
+    
 
     const intervalId = setInterval(fetchData, 5000); // Fetch data every 5 seconds
     return () => clearInterval(intervalId);
-  }, []); 
-  
-
+    }, []); 
 
   return (
     <div>

@@ -3,6 +3,7 @@
     @apply overflow-hidden;
     @apply bg-black;
     @apply flex flex-row justify-center;
+    @apply items-center;
 
     
 }
