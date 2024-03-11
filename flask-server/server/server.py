@@ -6,13 +6,20 @@ import numpy as np
 import pickle
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
+from keras.models import load_model
+from keras.preprocessing.image import img_to_array, load_img
+from keras.applications.mobilenet_v2 import preprocess_input
+
+
 
 app = Flask(__name__)
 CORS(app)
 
+
 # Initialize models
 model = YOLO("yolo-Weights/yolov8n.pt")
 modelOne = pickle.load(open('./model.pk1', 'rb'))
+modelTwo = load_model('./ModelTwo.h5')
 detected_object = {}  # declare detected_object as global and initialize it as a dictionary
 
 # Object classes
@@ -37,6 +44,7 @@ objects_to_detect = ["apple", "banana", "mango", "potato", "tomato"]
 # Global variables
 start_time = None
 img_array = None
+cropped_object = None
 
 def draw_boxes(img, results, class_names, objects_to_detect, confidence_threshold=0.5):
     object_detected = False
@@ -74,6 +82,7 @@ def ObjDec():
     global detected_object
     global start_time
     global img_array
+    global cropped_object
     
     detected_object = {}
     start_time = time.time()
@@ -98,12 +107,6 @@ def ObjDec():
                    
                     # Crop the object from the original image
                     cropped_object = img[y1:y2, x1:x2]
-                    
-                    # Resize the image to match model input shape
-                    resized_object = cv2.resize(cropped_object, (224, 224))
-    
-                    # Convert the image to array and normalize pixel values
-                    img_array = np.array(resized_object) / 255.0
                     camera.release()
                     
                     # Now you have img_array ready for your model inference
@@ -143,15 +146,37 @@ def getDetection():
 @app.route('/getPredictionOne')
 def getPredictionOne():
     global img_array
+    global cropped_object
+    global detected_object
     
-    if img_array is not None:
-        prediction = modelOne.predict(np.array([img_array]))
-        class_names = ['Class 1', 'Class 2']  
-        predicted_class = class_names[np.argmax(prediction)]
+    
+    
+    # if cropped_object is not None:
+    #     resized_object = cv2.resize(cropped_object, (224, 224))
+    #     img_array = np.array(resized_object) / 255.0
+    #     prediction = modelOne.predict(np.array([img_array]))
+    #     class_names = ['Rotten', 'Non-Rotten']  
+    #     predicted_class = class_names[np.argmax(prediction)]
+    #     if predicted_class == "Non-Rotten" and detected_object["class_name"] in  ["banana", "mango", "tomato"]:
+    #         resized_object = cv2.resize(cropped_object, (244, 244))
+    #         img_array = np.expand_dims(resized_object, axis=0)
+    #         predictions = modelTwo.predict(img_array)
+    #         predicted_class = np.argmax(predictions)
+    #         ripeness_classes = ['Unripe', 'Partially Ripe', 'Ripe']
+    #         predicted_class = ripeness_classes[predicted_class]
+    
+    if cropped_object is not None:
+        resized_object = cv2.resize(cropped_object, (244, 244))
+        img_array = np.expand_dims(resized_object, axis=0)
+        predictions = modelTwo.predict(img_array)
+        predicted_class = np.argmax(predictions)
+        ripeness_classes = ['Unripe', 'Partially Ripe', 'Ripe']
+        predicted_class = ripeness_classes[predicted_class]
         
         return jsonify({"prediction": predicted_class})
     else:
         return jsonify({"error": "Image array is not available yet"})
+
 
 if __name__ == "__main__":
     app.run(port=8000, debug=True)

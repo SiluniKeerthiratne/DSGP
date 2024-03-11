@@ -1,6 +1,6 @@
 import TextToSpeech from "../../assets/Components/TextToSpeech/textToSpeech";
 const setUpPage = () => {
-    const t = "class"
+    
     
       return (
         <div className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal '>

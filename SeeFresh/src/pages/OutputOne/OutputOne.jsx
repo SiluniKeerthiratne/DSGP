@@ -31,7 +31,7 @@ const OutputOne = ({ detectedObjectsData }) => {
         };
         fetchData(); // Call fetchData function
       }
-    }, 10000); // 10 seconds
+    }, 5000); // 10 seconds
 
     return () => clearTimeout(timer);
   }, [clicked]);

@@ -1,13 +1,16 @@
 import React from "react";
+import App from "../../App";
 
-const OutputTwo = ({ isRottenData }) => {
+
+
+const OutputTwo = ( { isRottenData } ) => {
+  const handleClick = () => {
+    <App />;
+    console.log("clicked");
+  };
   return (
-    <div>
-      {isRottenData === "Class 1" ? (
-        <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>This Is Not Rotten</h1>
-      ) : (
-        <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>This is Rotten</h1>
-      )}
+    <div  onClick = {handleClick}>
+      <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>This is {isRottenData}</h1>
     </div>
   );
 };
