@@ -18,8 +18,9 @@ CORS(app)
 
 # Initialize models
 model = YOLO("yolo-Weights/yolov8n.pt")
-modelOne = pickle.load(open('./model.pk1', 'rb'))
-modelTwo = load_model('./ModelTwo.h5')
+modelOne = load_model('./modelOne.h5')
+modelTwo = load_model('./modelTwo.h5')
+modelThree = load_model('./modelThree.h5')
 detected_object = {}  # declare detected_object as global and initialize it as a dictionary
 
 # Object classes
@@ -107,12 +108,13 @@ def ObjDec():
                    
                     # Crop the object from the original image
                     cropped_object = img[y1:y2, x1:x2]
-                    camera.release()
+                    
                     
                     # Now you have img_array ready for your model inference
                 break  # Break the loop if an object is detected            
         if detected_object:
-            print("here")
+            camera.release()
+            
             
             
             break
@@ -127,16 +129,22 @@ def ObjDec():
 
 @app.route('/video')
 def video():
+    
     return Response(ObjDec(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+
 
 @app.route('/getDetection')
 def getDetection():
     global detected_object  # declare detected_object as global
 
     if detected_object and detected_object.get("class_name"):
+        for key, value in detected_object.items():
+            print(key, value)
         print(detected_object["class_name"], "2222")
         class_name = detected_object["class_name"]
-        detected_object = {} # Reset detected_object
+        
         
         return jsonify({"isObjectDetected": True, "objectClass": class_name})
     else:
@@ -148,34 +156,49 @@ def getPredictionOne():
     global img_array
     global cropped_object
     global detected_object
+    global start_time
+    global img_array
+    global cropped_object
     
+
     
+    class_name = detected_object["class_name"]
     
-    # if cropped_object is not None:
-    #     resized_object = cv2.resize(cropped_object, (224, 224))
-    #     img_array = np.array(resized_object) / 255.0
-    #     prediction = modelOne.predict(np.array([img_array]))
-    #     class_names = ['Rotten', 'Non-Rotten']  
-    #     predicted_class = class_names[np.argmax(prediction)]
-    #     if predicted_class == "Non-Rotten" and detected_object["class_name"] in  ["banana", "mango", "tomato"]:
-    #         resized_object = cv2.resize(cropped_object, (244, 244))
-    #         img_array = np.expand_dims(resized_object, axis=0)
-    #         predictions = modelTwo.predict(img_array)
-    #         predicted_class = np.argmax(predictions)
-    #         ripeness_classes = ['Unripe', 'Partially Ripe', 'Ripe']
-    #         predicted_class = ripeness_classes[predicted_class]
+    print(class_name, "at /getprediction")
     
-    if cropped_object is not None:
+    if cropped_object is not None and class_name in ["banana", "mango", "potato", "tomato"]:
         resized_object = cv2.resize(cropped_object, (244, 244))
         img_array = np.expand_dims(resized_object, axis=0)
-        predictions = modelTwo.predict(img_array)
+        predictions = modelThree.predict(img_array)
+        predicted_class = np.argmax(predictions)
+        class_names = ['Rotten', 'Non-Rotten']  
+        predicted_class = class_names[np.argmax(predicted_class)]
+    elif cropped_object is not None and class_name in ["apple"]:
+        resized_object = cv2.resize(cropped_object, (244, 244))
+        img_array = np.expand_dims(resized_object, axis=0)
+        predictions = modelThree.predict(img_array)
+        predicted_class = np.argmax(predictions)
+        class_names = ['Rotten', 'Non-Rotten']  
+        predicted_class = class_names[np.argmax(predicted_class)]
+        
+    if predicted_class == "Non-Rotten" and class_name in  ["banana", "mango", "tomato"]:
+        resized_object = cv2.resize(cropped_object, (244, 244))
+        img_array = np.expand_dims(resized_object, axis=0)
+        predictions = modelThree.predict(img_array)
         predicted_class = np.argmax(predictions)
         ripeness_classes = ['Unripe', 'Partially Ripe', 'Ripe']
         predicted_class = ripeness_classes[predicted_class]
-        
+    if predicted_class:
+        start_time = None
+        img_array = None
+        cropped_object = None
+        detected_object = {}
         return jsonify({"prediction": predicted_class})
     else:
         return jsonify({"error": "Image array is not available yet"})
+        
+    
+    
 
 
 if __name__ == "__main__":
