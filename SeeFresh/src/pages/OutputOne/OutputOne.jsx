@@ -18,7 +18,7 @@ const OutputOne = ({ detectedObjectsData }) => {
           try {
             const response = await axios.get("http://127.0.0.1:8000/getPredictionOne");
             const jsonData = response.data;
-            setRottenState(jsonData.prediction); // Update state with fetched data
+            setRottenState([detectedObjectsData.objectClass, jsonData.prediction]); // Update state with fetched data
             console.log(jsonData);
             if (jsonData.prediction) {
               console.log("Prediction is true, handle accordingly");
