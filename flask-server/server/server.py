@@ -171,28 +171,37 @@ def getPredictionOne():
         img_array = np.expand_dims(resized_object, axis=0)
         predictions = modelThree.predict(img_array)
         predicted_class = np.argmax(predictions)
-        class_names = ['Rotten', 'Non-Rotten']  
+        class_names = ['FreshBanana', 'FreshMango', 'FreshPotato','FreshTomato', 'RottenBanana','RottenMango', 'RottenPotato','RottenTomato' ]
         predicted_class = class_names[np.argmax(predicted_class)]
+        if predicted_class in ["RottenMango", "RottenPotato","RottenBanana","RottenTomato"]:
+            predicted_class = "rotten"
+        else:
+            predicted_class = "non-Rotten"
     elif cropped_object is not None and class_name in ["apple"]:
         resized_object = cv2.resize(cropped_object, (244, 244))
         img_array = np.expand_dims(resized_object, axis=0)
         predictions = modelThree.predict(img_array)
         predicted_class = np.argmax(predictions)
-        class_names = ['Rotten', 'Non-Rotten']  
+        class_names = ['FreshApple','RottenApple']  
         predicted_class = class_names[np.argmax(predicted_class)]
+        if predicted_class=="RottenApple":
+            predicted_class = "rotten"
+        else:
+            predicted_class = "non-Rotten"
         
-    if predicted_class == "Non-Rotten" and class_name in  ["banana", "mango", "tomato"]:
+    if predicted_class == "non-Rotten" and class_name in  ["banana", "mango", "tomato"]:
         resized_object = cv2.resize(cropped_object, (244, 244))
         img_array = np.expand_dims(resized_object, axis=0)
         predictions = modelThree.predict(img_array)
         predicted_class = np.argmax(predictions)
-        ripeness_classes = ['Unripe', 'Partially Ripe', 'Ripe']
+        ripeness_classes = ['unripe', 'partially Ripe', 'ripe']
         predicted_class = ripeness_classes[predicted_class]
     if predicted_class:
         start_time = None
         img_array = None
         cropped_object = None
         detected_object = {}
+        print(predicted_class, "json object")
         return jsonify({"prediction": predicted_class})
     else:
         return jsonify({"error": "Image array is not available yet"})
