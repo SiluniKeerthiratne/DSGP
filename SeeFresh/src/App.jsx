@@ -18,6 +18,7 @@ const App = () => {
   const handlePlay = (text) => {
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
+    u.rate = 2;
     synth.speak(u);
   };
 

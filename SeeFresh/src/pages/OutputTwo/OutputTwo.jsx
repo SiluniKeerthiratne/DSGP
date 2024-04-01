@@ -12,6 +12,7 @@ const OutputTwo = ( { isRottenData } ) => {
     // const [initail , setInitail] = useState(false)
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
+    u.rate = 2;
     synth.speak(u);
   };
   
@@ -30,24 +31,18 @@ const OutputTwo = ( { isRottenData } ) => {
     text = "The " + objectClass + " is fresh and in " + prediction + " condition"
   }
 
-  const handleClick = () => {
-    handlePlay(text);
+  const handleClickIn = () => {
+    console.log("in handle paly baby")
     if (prediction == "Rotten") {
-      // setInitial("one")
-      text = "The " + objectClass + " is rotten and can not be consumed"
       handlePlay(textOne);
     } else if (objectClass =="apple" || objectClass == "potato") {
-      // setInitial("two")
-      text = "The " + objectClass + " is fresh and sutable for consumption"
       handlePlay(textTwo);
     } else {
-      // setInitial("three")
-      text = "The " + objectClass + " is fresh and in " + prediction + " condition"
       handlePlay(textThree);
     }
   };
   return (
-    <div  onClick = {handleClick}>
+    <div  onClick = {handleClickIn}>
       
       <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>{text}</h1>
     </div>
