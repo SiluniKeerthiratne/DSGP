@@ -5,8 +5,7 @@ import App from '../../App';
 
 const OutputOne = ({ detectedObjectsData }) => {
   const [clicked, setClicked] = useState(false);
-  const [clickedInitial, setClickedInitial] = useState(false);
-  const [showComponentTwo, setShowComponentTwo] = useState(null);
+  const [showComponentTwo, setShowComponentTwo] = useState('intial');
   const [rottenState, setRottenState] = useState(false);
 
   useEffect(() => {
@@ -47,18 +46,18 @@ const OutputOne = ({ detectedObjectsData }) => {
 
 
   const handleClick = () => {
-    if(clickedInitial===false){
-      setClickedInitial(true);
+    if(showComponentTwo==="intial"){
+      setShowComponentTwo(null);
+      setClicked(true)
+
       handlePlay(OutPutText);
 
-    } else if (clickedInitial===true){
-      setClicked(true);}
-    console.log("clicked")
+    } 
   };
 
   return (
     <div className='container' onClick={handleClick}>
-      {showComponentTwo === null ? (
+      {showComponentTwo === null || showComponentTwo === 'intial' ? (
         <div>
           <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>
             A {detectedObjectsData.objectClass} is detected on the screen, should we capture it. Tap on screen if you want to capture it
