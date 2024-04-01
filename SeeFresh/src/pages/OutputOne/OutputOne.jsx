@@ -5,6 +5,7 @@ import App from '../../App';
 
 const OutputOne = ({ detectedObjectsData }) => {
   const [clicked, setClicked] = useState(false);
+  const [clickedInitial, setClickedInitial] = useState(false);
   const [showComponentTwo, setShowComponentTwo] = useState(null);
   const [rottenState, setRottenState] = useState(false);
 
@@ -36,8 +37,22 @@ const OutputOne = ({ detectedObjectsData }) => {
     return () => clearTimeout(timer);
   }, [clicked]);
 
+  const handlePlay = (text) => {
+    const synth = window.speechSynthesis;
+    const u = new SpeechSynthesisUtterance(text);
+    synth.speak(u);
+  };
+
+  const OutPutText = `A ${detectedObjectsData.objectClass} is detected on the screen, should we capture it. Tap on screen if you want to capture it`;
+
+
   const handleClick = () => {
-    setClicked(true);
+    if(clickedInitial===false){
+      setClickedInitial(true);
+      handlePlay(OutPutText);
+
+    } else if (clickedInitial===true){
+      setClicked(true);}
     console.log("clicked")
   };
 
