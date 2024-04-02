@@ -34,7 +34,7 @@ const OutputOne = ({ detectedObjectsData }) => {
     const timer = setTimeout(() => {
       setShowComponentTwo("input")
       console.log("setShowApp true")
-    }, 5000); // 3 seconds
+    }, 10000); // 3 seconds
     return () => clearTimeout(timer);
   }, []);
 
@@ -48,10 +48,13 @@ const OutputOne = ({ detectedObjectsData }) => {
   const OutPutText = `A ${detectedObjectsData.objectClass} is detected on the screen, should we capture it. Tap on screen if you want to capture it`;
 
   const handleClick = () => {
-    console.log("screen clicked, going to outputTwo")
-    fetchData();
-    setShowComponentTwo("componentTwo")
-  };
+    if (showComponentTwo === "initial"){
+      console.log("screen clicked, going to outputTwo")
+      fetchData();
+      
+  }
+    }
+    
 
   return (
     <div className='container' onClick={handleClick}>
@@ -61,10 +64,10 @@ const OutputOne = ({ detectedObjectsData }) => {
             {OutPutText}
           </h1>
         </div>
-      ) : showComponentTwo === "componentTwo" ? (
+      ) : showComponentTwo === true ? (
         <OutputTwo isRottenData={rottenState} />
       ) : showComponentTwo === "input"  ? (
-        <InputPage onDataDetected={setDetectedObjectData}/>
+        <App/>
       ) : null}
     </div>
   );
