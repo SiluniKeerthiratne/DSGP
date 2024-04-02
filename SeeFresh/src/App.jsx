@@ -8,13 +8,6 @@ import './App.css';
 
 const App = () => {
   const [detectedObjectData, setDetectedObjectData] = useState("initial");
- 
-  // useEffect(() => {
-  //   return () => {
-  //     setDetectedObjectData("initial")
-  //     console.log("initll cajngrf")
-  //   };
-  // }, []);
 
   useEffect(() => {
     return () => {

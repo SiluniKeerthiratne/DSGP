@@ -4,6 +4,7 @@ import App from "../../App";
 
 
 const OutputTwo = ( { isRottenData } ) => {
+  
   const objectClass = isRottenData[0]; 
   const prediction = isRottenData[1];
   let text = null;
@@ -20,6 +21,8 @@ const OutputTwo = ( { isRottenData } ) => {
       
     };
   }, []);
+
+  
   
   const handlePlay = (text) => {
     // const [initail , setInitail] = useState(false)
