@@ -21,14 +21,13 @@ const App = () => {
       if (detectedObjectData === "two") {
         handlePlay("camera is on");
         console.log("in use effect");
-      } else if (
-        detectedObjectData.isObjectDetected ) {
-        console.log("here in output 2")
+      } else if (detectedObjectData !== "two" && detectedObjectData !== "one" && detectedObjectData !== "initial" && detectedObjectData !== null) {
         const OutPutText = `A ${detectedObjectData.objectClass} is detected on the screen, should we capture it. Tap on the screen if you want to capture it`;
         handlePlay(OutPutText);
       }
     };
   }, [detectedObjectData]);
+  
 
   const beep = new Audio('/beep-01a.mp3'); // Replace 'beep.mp3' with your audio file path
       // beep.play();
@@ -79,7 +78,7 @@ const App = () => {
       ) : (
         <OutputOne 
           detectedObjectsData={detectedObjectData}
-          onLoad={handleOutputOneLoad} // Pass a callback to handle OutputOne load event
+           // Pass a callback to handle OutputOne load event
         />
       )}
     </div>

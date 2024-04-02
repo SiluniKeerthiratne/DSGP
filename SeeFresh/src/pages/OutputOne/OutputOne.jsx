@@ -9,6 +9,13 @@ const OutputOne = ({ detectedObjectsData }) => {
   const [rottenState, setRottenState] = useState(false);
 
   useEffect(() => {
+    return () => {
+      handlePlay(OutPutText);
+      
+    };
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       if (!clicked) {
         // If user hasn't clicked, show Input component
@@ -49,7 +56,7 @@ const OutputOne = ({ detectedObjectsData }) => {
   const handleClick = () => {
     if(showComponentTwo==="intial"){
       setShowComponentTwo(null);
-      handlePlay(OutPutText);
+      
     } else if (showComponentTwo===null){
       setClicked(true);
     }

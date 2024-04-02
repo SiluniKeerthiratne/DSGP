@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import App from "../../App";
 
 
@@ -7,6 +7,19 @@ const OutputTwo = ( { isRottenData } ) => {
   const objectClass = isRottenData[0]; 
   const prediction = isRottenData[1];
   let text = null;
+
+  useEffect(() => {
+    return () => {
+      if (prediction == "Rotten") {
+        handlePlay(textOne);
+      } else if (objectClass =="apple" || objectClass == "potato") {
+        handlePlay(textTwo);
+      } else {
+        handlePlay(textThree);
+      }
+      
+    };
+  }, []);
   
   const handlePlay = (text) => {
     // const [initail , setInitail] = useState(false)
