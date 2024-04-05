@@ -16,7 +16,7 @@ To get started with SeeFresh, follow these steps:
    ```
 
 2. **Download Models:**
-   Download the required models from [the provided link](https://drive.google.com/drive/folders/1L5SjSJ9vpnjAuMBZ-OtN2WjrWEW9PeCH?usp=sharing) and place them in the `server` folder within the `flask-server` directory.
+   Download the required models from [the link](https://drive.google.com/drive/folders/1L5SjSJ9vpnjAuMBZ-OtN2WjrWEW9PeCH?usp=sharing) and place them in the `server` folder within the `flask-server` directory.
 
 3. **Run Backend:**
    Navigate to the `flask-server` directory in your terminal:
