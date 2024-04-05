@@ -21,7 +21,7 @@ To get started with SeeFresh, follow these steps:
 3. **Run Backend:**
    Navigate to the `flask-server` directory in your terminal:
    ```bash
-   cd SeeFresh/flask-server
+   cd flask-server/server
    ```
    Then, execute the following command to start the backend server:
    ```bash
@@ -31,7 +31,7 @@ To get started with SeeFresh, follow these steps:
 4. **Run Frontend:**
    Go to the `SeeFresh` directory:
    ```bash
-   cd ../SeeFresh
+   cd SeeFresh
    ```
    Install dependencies:
    ```bash
