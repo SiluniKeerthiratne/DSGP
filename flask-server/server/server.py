@@ -103,7 +103,6 @@ def ObjDec():
                 if start_time is None:
                     start_time = time.time()
                 elif time.time() - start_time >= 5:
-                    print(class_name, "yomama")
                     detected_object = {"class_name": class_name, "box": [x1, y1, x2, y2]}
                    
                     # Crop the object from the original image
@@ -129,7 +128,6 @@ def ObjDec():
 
 @app.route('/video')
 def video():
-    
     return Response(ObjDec(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -142,7 +140,7 @@ def getDetection():
     if detected_object and detected_object.get("class_name"):
         for key, value in detected_object.items():
             print(key, value)
-        print(detected_object["class_name"], "2222")
+        print(detected_object["class_name"])
         class_name = detected_object["class_name"]
         
         

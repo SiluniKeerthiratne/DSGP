@@ -7,10 +7,14 @@ import InputPage from '../inputPage/InputPage';
 const OutputOne = ({ detectedObjectsData }) => {
   const [showComponentTwo, setShowComponentTwo] = useState('initial');
   const [rottenState, setRottenState] = useState(false);
-  const [detectedObjectData, setDetectedObjectData] = useState("initial");
+  const [timerId, setTimerId] = useState(null);
 
   useEffect(() => {
     return () => {
+      if (showComponentTwo == true){
+        setShowComponentTwo("initial")
+        
+      }
       handlePlay(OutPutText);
     };
   }, []);
@@ -23,7 +27,11 @@ const OutputOne = ({ detectedObjectsData }) => {
       console.log(jsonData);
       if (jsonData.prediction) {
         console.log("Prediction is true, handle accordingly");
+        if (timerId) {
+          clearTimeout(timerId); // Clear timeout if exists
+        }
         setShowComponentTwo(true);
+        
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -32,10 +40,17 @@ const OutputOne = ({ detectedObjectsData }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowComponentTwo("input")
-      console.log("setShowApp true")
-    }, 10000); // 3 seconds
-    return () => clearTimeout(timer);
+      setRottenState(false)
+      setTimerId(null)
+      setShowComponentTwo("input");
+      console.log("setShowApp true");
+    }, 10000); // 10 seconds
+    setTimerId(timer); // Save timer ID
+    
+    return () => {clearTimeout(timer);
+      setShowComponentTwo("initial")
+      setRottenState(false)
+      setTimerId(null)}
   }, []);
 
   const handlePlay = (text) => {
@@ -45,7 +60,7 @@ const OutputOne = ({ detectedObjectsData }) => {
     synth.speak(u);
   };
 
-  const OutPutText = `A ${detectedObjectsData.objectClass} is detected on the screen, should we capture it. Tap on screen if you want to capture it`;
+  const OutPutText = `A ${detectedObjectsData.objectClass} is detected on the screen, Tap on screen if you want to capture it`;
 
   const handleClick = () => {
     if (showComponentTwo === "initial"){

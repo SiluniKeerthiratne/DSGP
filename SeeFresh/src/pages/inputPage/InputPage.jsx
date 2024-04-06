@@ -26,6 +26,11 @@ const InputPage = ({ onDataDetected }) => {
     return () => clearInterval(intervalId);
   }, [onDataDetected]);
 
+  useEffect(() => {
+    if (data != null) {
+    setData(null)}
+  }, []);
+
   return (
     <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
       <img

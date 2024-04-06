@@ -15,7 +15,7 @@ const App = () => {
         handlePlay("Camera is on");
         console.log("in use effect");
       } else if (detectedObjectData !== "two" && detectedObjectData !== "one" && detectedObjectData !== "initial" && detectedObjectData !== null) {
-        const OutPutText = `A ${detectedObjectData.objectClass} is detected on the screen, should we capture it. Tap on the screen if you want to capture it`;
+        const OutPutText = `A ${detectedObjectData.objectClass} is detected on the screen. Tap on the screen if you want to capture it`;
         handlePlay(OutPutText);
       }
     };
@@ -37,7 +37,7 @@ const App = () => {
   };
 
   const textInto = "Welcome to SeeFresh. Everything you need to know about your groceries just one click away!. Tap screen to continue"
-  const textSetUp = "Tap once on the  the screen, we will indicate with a “beep” if an object is placed within the screen, then tap the the screen again to capture."
+  const textSetUp = "Tap on screen to open your camera, we will indicate if an object is detected"
   
 
   const handleClick = () => {
@@ -55,6 +55,10 @@ const App = () => {
 
   useEffect(() => {
     console.log("mounted");
+    setDetectedObjectData("initial");
+    console.log("set to initial");
+    
+
   }, []);
 
   return (

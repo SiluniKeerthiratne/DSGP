@@ -4,26 +4,29 @@ import App from "../../App";
 
 
 const OutputTwo = ( { isRottenData } ) => {
-  const [voiceOver, setVoiceOver] = useState(false);
+  const [goToApp, setgoToApp] = useState(false);
   const objectClass = isRottenData[0]; 
   const prediction = isRottenData[1];
   let text = null;
 
   useEffect(() => {
     return () => {
-      if(!voiceOver)
-      {if (prediction == "Rotten") {
+     
+      if (prediction == "Rotten") {
+       
         handlePlay(textOne);
-        setVoiceOver(true)
+        
       } else if (objectClass =="apple" || objectClass == "potato") {
+        
         handlePlay(textTwo);
-        setVoiceOver(true)
+        
       } else {
+       
         handlePlay(textThree);
-        setVoiceOver(true)
+        
       }}
       
-    };
+    
   }, []);
 
   
@@ -33,12 +36,13 @@ const OutputTwo = ( { isRottenData } ) => {
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 2;
+    console.log("voice over playing")
     synth.speak(u);
   };
   
-  const textOne = `The ${objectClass} is rotten and can not be consumed`
-  const textTwo = `The ${objectClass} is fresh and sutable for consumption`
-  const textThree = `The ${objectClass} is fresh and in ${prediction} condition`
+  const textOne = `The ${objectClass} is rotten and can not be consumed. Tap screen to capture an item again`
+  const textTwo = `The ${objectClass} is fresh and sutable for consumption. Tap screen to capture an item again`
+  const textThree = `The ${objectClass} is fresh and in ${prediction} condition. Tap screen to capture an item again`
 
   if (prediction == "Rotten") {
     // setInitial("one")
@@ -51,11 +55,23 @@ const OutputTwo = ( { isRottenData } ) => {
     text = "The " + objectClass + " is fresh and in " + prediction + " condition"
   }
 
+  const handleClick = () => {
+    setgoToApp(true);
+  };
+
+ 
   
   return (
-    <div>
+    <div onClick={handleClick}>
+      {goToApp === false ? (
+        <div className='h-full'>
+          <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>{text}. Tap screen to capture an item again</h1>
+        </div>
+      ) : (
+        <App />
+      )}
       
-      <h1 className='flex flex-col justify-center font-poppins text-white text-3xl mx-12 text-center font-semibold font-style: normal bg-black'>{text}</h1>
+      
     </div>
   );
 };
