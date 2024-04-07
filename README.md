@@ -18,7 +18,13 @@ To get started with SeeFresh, follow these steps:
 2. **Download Models:**
    Download the required models from [the link](https://drive.google.com/drive/folders/1L5SjSJ9vpnjAuMBZ-OtN2WjrWEW9PeCH?usp=sharing) and place them in the `server` folder within the `flask-server` directory.
 
-3. **Run Backend:**
+3. **Download Dependancies from requirments.txt:**
+    Open your terminal:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run Backend:**
    Navigate to the `flask-server` directory in your terminal:
    ```bash
    cd flask-server/server
@@ -28,7 +34,7 @@ To get started with SeeFresh, follow these steps:
    python3 server.py
    ```
 
-4. **Run Frontend:**
+5. **Run Frontend:**
    Go to the `SeeFresh` directory:
    ```bash
    cd SeeFresh
