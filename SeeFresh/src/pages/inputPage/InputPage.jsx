@@ -4,6 +4,7 @@ import axios from "axios";
 
 const InputPage = ({ onDataDetected }) => {
   const [data, setData] = useState(null);
+  const [src, setSrc] = useState("http://127.0.0.1:8000/video");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ const InputPage = ({ onDataDetected }) => {
   return (
     <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
       <img
-        src="http://127.0.0.1:8000/video"
+        src={src}
         style={{ width: "100%", height: "100%", objectFit: "cover" }}
         alt="Video"
       />
