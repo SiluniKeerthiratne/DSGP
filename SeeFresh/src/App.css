@@ -1,0 +1,9 @@
+.container{
+    @apply h-[100dvh];
+    @apply overflow-hidden;
+    @apply bg-black;
+    @apply flex flex-row justify-center;
+    @apply items-center;
+
+    
+}
