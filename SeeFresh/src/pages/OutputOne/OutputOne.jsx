@@ -10,10 +10,16 @@ const OutputOne = ({ detectedObjectsData }) => {
   const [timerId, setTimerId] = useState(null);
 
   useEffect(() => {
+    setShowComponentTwo('initial');
+    setRottenState(false);
+    setTimerId(null);
+    console.log('useEffect, outputOne', rottenState, showComponentTwo, timerId);
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (showComponentTwo == true){
         setShowComponentTwo("initial")
-        
       }
       handlePlay(OutPutText);
     };
@@ -59,6 +65,7 @@ const OutputOne = ({ detectedObjectsData }) => {
     u.rate = 2;
     synth.speak(u);
   };
+  
 
   const OutPutText = `A ${detectedObjectsData.objectClass} is detected on the screen, Tap on screen if you want to capture it`;
 
@@ -66,7 +73,6 @@ const OutputOne = ({ detectedObjectsData }) => {
     if (showComponentTwo === "initial"){
       console.log("screen clicked, going to outputTwo")
       fetchData();
-      
   }
     }
     

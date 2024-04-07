@@ -10,23 +10,22 @@ const OutputTwo = ( { isRottenData } ) => {
   let text = null;
 
   useEffect(() => {
+    if (goToApp === true) {
+      setgoToApp(false);
+      console.log('useEffect, outputTwo', goToApp);
+    }
+  }, []);
+
+  useEffect(() => {
     return () => {
      
       if (prediction == "Rotten") {
-       
         handlePlay(textOne);
-        
       } else if (objectClass =="apple" || objectClass == "potato") {
-        
         handlePlay(textTwo);
-        
       } else {
-       
         handlePlay(textThree);
-        
       }}
-      
-    
   }, []);
 
   

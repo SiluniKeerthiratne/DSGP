@@ -8,6 +8,7 @@ const InputPage = ({ onDataDetected }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Fetching data...");
         const response = await fetch("http://127.0.0.1:8000/getDetection");
         const jsonData = await response.json();
         setData(jsonData); // Update state with fetched data
@@ -29,6 +30,7 @@ const InputPage = ({ onDataDetected }) => {
   useEffect(() => {
     if (data != null) {
     setData(null)}
+    console.log('useEffect, INPUT', data);
   }, []);
 
   return (

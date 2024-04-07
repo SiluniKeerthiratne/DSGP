@@ -138,8 +138,6 @@ def getDetection():
     global detected_object  # declare detected_object as global
 
     if detected_object and detected_object.get("class_name"):
-        for key, value in detected_object.items():
-            print(key, value)
         print(detected_object["class_name"])
         class_name = detected_object["class_name"]
         

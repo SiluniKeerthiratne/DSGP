@@ -10,6 +10,12 @@ const App = () => {
   const [detectedObjectData, setDetectedObjectData] = useState("initial");
 
   useEffect(() => {
+    if(detectedObjectData === null){
+      setDetectedObjectData("initial")
+    }
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (detectedObjectData === "two") {
         handlePlay("Camera is on");
@@ -54,11 +60,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log("mounted");
+    console.log(detectedObjectData);
     setDetectedObjectData("initial");
     console.log("set to initial");
-    
-
   }, []);
 
   return (
