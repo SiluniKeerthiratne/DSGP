@@ -12,7 +12,7 @@ To get started with SeeFresh, follow these steps:
 
 1. **Clone the Repository:**
    ```bash
-   git clone -b siluni https://github.com/SiluniKeerthiratne/DSGP
+   git clone https://github.com/SiluniKeerthiratne/DSGP
    ```
 
 2. **Download Models:**
@@ -48,7 +48,7 @@ Once both the backend and frontend servers are running, you can access SeeFresh 
 
 - [Siluni Keerthiratne](mailto:siluni.20220641@iit.ac.lk)
 - [Vanuja De Silva](mailto:vanuja.20220141@iit.ac.lk)
-- [Nisak Gamage](mailto:nisal.20220359@iit.ac.lk)
+- [Nisal Gamage](mailto:nisal.20220359@iit.ac.lk)
 - [Ganidu Perera](mailto:gaindu.20210777@iit.ac.lk)
 
 Feel free to reach out to the contributors with any questions or feedback regarding the project.
